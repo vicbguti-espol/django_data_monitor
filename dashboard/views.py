@@ -12,9 +12,17 @@ def index(request):
     # Número total de respuestas
     total_responses = len(posts)
 
+    conteo_por_tipo = {}
+    for key, item in posts.items():
+        tipo = item.get("tipo")  # Usa .get() para evitar errores si 'tipo' no existe
+        if tipo:  # Asegura que 'tipo' no sea None
+            conteo_por_tipo[tipo] = conteo_por_tipo.get(tipo, 0) + 1
+
     data = {
         "title": "Landing Page' Dashboard",
         "total_responses": total_responses,
+        "posts": posts,
+        "conteo": conteo_por_tipo,
     }
 
     return render(request, "dashboard/index.html", data)
