@@ -103,5 +103,43 @@
 
     </div>
 </body>
+    {% if chart_data %}
+    <script>
+        // Convertimos los datos del gráfico de JSON a un objeto JavaScript
+        const chartData = JSON.parse(`{{ chart_data|escapejs }}`);
+        console.log(chartData);  // Verifica los datos en la consola
 
+        // Configuración del gráfico de Chart.js
+        const lineConfig = {
+            type: 'line',
+            data: chartData,  // Usamos los datos obtenidos desde Django
+            options: {
+                responsive: true,
+                legend: {
+                    display: false,  // No mostrar la leyenda
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Fecha',
+                        },
+                    },
+                    y: {
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Cantidad de Comentarios',
+                        },
+                    },
+                },
+            },
+        };
+
+        // Crear el gráfico
+        const lineCtx = document.getElementById('line').getContext('2d');
+        new Chart(lineCtx, lineConfig);
+    </script>
+    {% endif %}
 </html>
