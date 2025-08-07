@@ -157,7 +157,7 @@
       <div class="row-span-1 grid gap-6 mb-8 md:grid-cols-12">
         <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-            Título del gráfico
+            Votaciones a lo largo del tiempo
           </h4>
           <canvas id="line"></canvas>
         </div>
@@ -167,4 +167,88 @@
     </div>
 
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function fetchData() {
+      try {
+        // Realiza la solicitud fetch a tu API
+        const response = await fetch('https://vicbguti.pythonanywhere.com/landing/api/?format=json'); // Cambia esta URL por la URL de tu API
+        const data = await response.json();
+
+        // Procesar los datos
+        const fechas = [];
+        const mensajes = [];
+
+        // Ordenamos los datos por fecha
+        const sortedData = Object.values(data).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+        sortedData.forEach(item => {
+          fechas.push(new Date(item.fecha).toLocaleString()); // Convertir la fecha a formato legible
+          mensajes.push(item.mensaje.length); // En este caso, usamos la longitud del mensaje como el dato a graficar
+        });
+
+        // Llamamos a la función para mostrar los datos en el gráfico
+        renderChart(fechas, mensajes);
+
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+      }
+    }
+
+    function renderChart(fechas, mensajes) {
+      const lineConfig = {
+        type: 'line',
+        data: {
+          labels: fechas, // Usamos las fechas como etiquetas del eje X
+          datasets: [
+            {
+              label: 'Votaciones',
+              backgroundColor: '#0694a2', // Color de la línea
+              borderColor: '#0694a2',
+              data: mensajes, // Usamos la longitud de los mensajes como valores
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true,
+          },
+          scales: {
+            x: {
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Fecha',
+              },
+            },
+            y: {
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Longitud del mensaje',
+              },
+            },
+          },
+        },
+      };
+
+      // Obtener el contexto del canvas para renderizar el gráfico
+      const lineCtx = document.getElementById('line').getContext('2d');
+      window.myLine = new Chart(lineCtx, lineConfig);
+    }
+
+    // Llamamos a la función para obtener y procesar los datos
+    fetchData();
+  </script>
+
 </main>

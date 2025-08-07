@@ -4,7 +4,7 @@
 const lineConfig = {
   type: 'line',
   data: {
-    labels: ['Hito 1', 'Hito 2', 'Hito 3', 'Hito 4', 'Hito 5', 'Hito 6', 'Hito 7'],
+    labels: ['Hito x', 'Hito 2', 'Hito 3', 'Hito 4', 'Hito 5', 'Hito 6', 'Hito 7'],
     datasets: [
       {
         label: 'Serie 1',
