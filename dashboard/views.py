@@ -5,10 +5,8 @@ from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 from datetime import datetime, timezone
 import json
-from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
-@permission_required('dashboard.index_viewer', raise_exception=True)
 def index(request):
     response = requests.get(settings.API_URL)  # URL de la API
     posts = response.json()  # Convertir la respuesta a JSON
